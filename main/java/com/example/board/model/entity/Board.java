@@ -27,9 +27,10 @@ public class Board {
         this.member = member;
     }
 
-    public Board(String title, String content){
+    public Board(String title, String content, Member member){
         this.title = title;
         this.content = content;
+        this.member = member;
     }
 
     public void updateBoard (String content){

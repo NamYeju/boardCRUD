@@ -24,18 +24,22 @@ public class BoardService {
 
     //게시판 작성
     public void createBoard(BoardCreateDto boardCreateDto){
-        Board board = new Board(boardCreateDto.getTitle(), boardCreateDto.getContent());
         Member member = memberRepository.findByIdentity(boardCreateDto.getIdentity());
         if(member == null)
             return;
-        board.setMember(member);
+        Board board = new Board(boardCreateDto.getTitle(), boardCreateDto.getContent(), member);
         boardRepository.save(board);
     }
 
+    //게시판 수정
     public void updateBoard(BoardUpdateDto boardUpdateDto){
-        Board board = boardRepository.findByMemberIdentity(boardUpdateDto.getIdentity());
-        board.updateBoard(boardUpdateDto.getContent());
-        boardRepository.save(board);
+        Member member = memberRepository.findByIdentity(boardUpdateDto.getIdentity());
+        Optional<Board> board = boardRepository.findById(boardUpdateDto.getBoard_id());
+        if(member.getIdentity() == board.get().getMember().getIdentity()) {
+            board.get().updateBoard(boardUpdateDto.getContent());
+            boardRepository.save(board.get());
+        }
+        else return;
     }
 
     //게시판 삭제
@@ -59,12 +63,12 @@ public class BoardService {
         }
         return boardSearchAllDto;
     }
-    //게시판 전체 조회
-    public BoardSearchDetailDto searchDetailBoard(String identity){
+    //게시판 상세 조회
+    public BoardSearchDetailDto searchDetailBoard(Long board_id){
         BoardSearchDetailDto boardSearchDetailDto = new BoardSearchDetailDto();
-        Member member = memberRepository.findByIdentity(identity);
-        Optional<Board> board = boardRepository.findById(member.getId());
+        Optional<Board> board = boardRepository.findById(board_id);
 
+        boardSearchDetailDto.setBoard_id(board_id);
         boardSearchDetailDto.setIdentity(board.get().getMember().getIdentity());
         boardSearchDetailDto.setTitle(board.get().getTitle());
         boardSearchDetailDto.setContent(board.get().getContent());

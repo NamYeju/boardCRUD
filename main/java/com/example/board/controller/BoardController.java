@@ -39,7 +39,7 @@ public class BoardController {
     }
     //상세 조회
     @GetMapping("/searchDetailBoard")
-    public BoardSearchDetailDto searchDetailBoard(@RequestParam String identity){
-        return boardService.searchDetailBoard(identity);
+    public BoardSearchDetailDto searchDetailBoard(@RequestParam Long board_id){
+        return boardService.searchDetailBoard(board_id);
     }
 }
