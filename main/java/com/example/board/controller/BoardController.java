@@ -28,8 +28,8 @@ public class BoardController {
     }
     //삭제
     @DeleteMapping("/deleteBoard")
-    public void deleteBoard(@RequestParam String title){
-        boardService.deleteBoard(title);
+    public void deleteBoard(@RequestParam long board_id, String identity){
+        boardService.deleteBoard(board_id, identity);
     }
 
     //전체 조회

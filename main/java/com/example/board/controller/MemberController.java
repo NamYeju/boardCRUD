@@ -4,14 +4,23 @@ import com.example.board.Service.MemberService;
 import com.example.board.model.dto.MemberCreateDto;
 import com.example.board.model.dto.MemberSearchDto;
 import com.example.board.model.dto.MemberUpdateDto;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    @GetMapping("/")
+    public String index(Model model){
+        model.addAttribute("name", "kim");
+        return "index.html";
+    }
 
     @PostMapping("/memberCreate")
     public void createMember(@RequestBody MemberCreateDto memberCreateDto){

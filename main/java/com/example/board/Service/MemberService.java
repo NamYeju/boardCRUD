@@ -15,8 +15,12 @@ public class MemberService {
 
     //회원가입
     public void memberCreate(MemberCreateDto memberCreateDto){
-        Member member = new Member(memberCreateDto.getIdentity(), memberCreateDto.getPassword(),
-                memberCreateDto.getName(), memberCreateDto.getAge());
+        Member member = Member.builder()
+                .identity(memberCreateDto.getIdentity())
+                .password(memberCreateDto.getPassword())
+                .name(memberCreateDto.getName())
+                .age(memberCreateDto.getAge())
+                .build();
         memberRepository.save(member);
     }
     //회원정보 조회

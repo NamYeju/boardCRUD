@@ -8,12 +8,15 @@ import com.example.board.model.entity.Board;
 import com.example.board.model.entity.Member;
 import com.example.board.repository.BoardRepository;
 import com.example.board.repository.MemberRepository;
+import org.hibernate.query.spi.StreamDecorator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BoardService {
@@ -27,7 +30,12 @@ public class BoardService {
         Member member = memberRepository.findByIdentity(boardCreateDto.getIdentity());
         if(member == null)
             return;
-        Board board = new Board(boardCreateDto.getTitle(), boardCreateDto.getContent(), member);
+
+        Board board = Board.builder()
+                .title(boardCreateDto.getTitle())
+                .content(boardCreateDto.getContent())
+                .member(member)
+                .build();
         boardRepository.save(board);
     }
 
@@ -43,25 +51,47 @@ public class BoardService {
     }
 
     //게시판 삭제
-    public void deleteBoard(String title){
-        Board board = boardRepository.findByTitle(title);
-        boardRepository.delete(board);
+    public void deleteBoard(Long board_id, String identity){
+        Member member = memberRepository.findByIdentity(identity);
+        Optional<Board> board = boardRepository.findById(board_id);
+        if(board.get().getMember().getIdentity() == member.getIdentity())
+            boardRepository.delete(board.get());
+        else return;
     }
     
     //게시판 전체 조회
     public List<BoardSearchAllDto> searchAllBoard(){
         List<BoardSearchAllDto> boardSearchAllDto = new ArrayList<>();
-        List<Board> board = boardRepository.findAll();
 
-        for(int i=4; i<board.size(); i++){
-            BoardSearchAllDto boardSearchAllDto1 = new BoardSearchAllDto();
-            String identity = board.get(i).getMember().getIdentity();
-            String title = board.get(i).getTitle();
-            boardSearchAllDto1.setIdentity(identity);
-            boardSearchAllDto1.setTitle(title);
-            boardSearchAllDto.add(boardSearchAllDto1);
+        List<String> identityList = boardRepository.findAll()
+                .stream()
+                .map(Board::getMember)
+                .map(Member::getIdentity)
+                .collect(Collectors.toList());
+
+        List<String> titleList = boardRepository.findAll()
+                .stream()
+                .map(Board::getTitle)
+                .collect(Collectors.toList());
+
+        for(int i=1; i< identityList.size(); i++){
+            boardSearchAllDto.get(i).setIdentity(identityList.get(i));
+            boardSearchAllDto.get(i).setTitle(titleList.get(i));
         }
+
         return boardSearchAllDto;
+    }
+    public List<BoardSearchAllDto> searchAllBoard2(){
+        List<Board> boardList = boardRepository.findAll();
+//        return boardList.stream()
+//                .map(board -> {
+//                    return new BoardSearchAllDto(board.getMember().getIdentity(), board.getTitle());
+//                })
+//                .collect(Collectors.toList());
+        return boardList.stream()
+                .map(board -> board.toDomain()) //Board::toDomain
+                .collect(Collectors.toList());
+
     }
     //게시판 상세 조회
     public BoardSearchDetailDto searchDetailBoard(Long board_id){

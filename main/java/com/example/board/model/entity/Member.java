@@ -1,15 +1,18 @@
 package com.example.board.model.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.sun.istack.NotNull;
+import lombok.*;
+
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "board_member")
-@Getter
-@NoArgsConstructor
-public class Member {
+@Getter @Setter
+@AllArgsConstructor
+@Builder
+public class Member{
     @Id
     @Column(name = "MEMBER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +25,37 @@ public class Member {
     private String name;
     private int age;
 
-    public Member(String identity, String password, String name, int age) {
-        this.identity = identity;
-        this.password = password;
-        this.name = name;
-        this.age = age;
+    public Member() {
+
     }
+
+    //    //Builder Class
+//    public static class MemberBuilder{
+//        //required parameters
+//        private String identity;
+//        private String password;
+//        private String name;
+//
+//        //optional parameters
+//        private int age;
+//
+//        public MemberBuilder(String identity, String password, String name) {
+//            this.identity = identity;
+//            this.password = password;
+//            this.name = name;
+//        }
+//        public MemberBuilder age(int age){
+//            this.age = age;
+//            return this;
+//        }
+//
+//        public Member build(){
+//            return new Member(this);
+//        }
+//    }
     public void update(String name){
         this.name = name;
     }
+
+
 }
