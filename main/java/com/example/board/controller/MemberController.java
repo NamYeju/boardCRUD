@@ -1,6 +1,7 @@
 package com.example.board.controller;
 
 import com.example.board.Service.MemberService;
+import com.example.board.Service.userNotFoundException;
 import com.example.board.model.dto.MemberCreateDto;
 import com.example.board.model.dto.MemberSearchDto;
 import com.example.board.model.dto.MemberUpdateDto;
@@ -28,6 +29,10 @@ public class MemberController {
     }
     @GetMapping("/memberSearch")
     public MemberSearchDto memberSearch(@RequestParam String identity){
+        MemberSearchDto membersearchDto = memberService.memberSearch(identity);
+        if(membersearchDto == null){
+            throw new userNotFoundException(String.format("id[%s]is not found", identity));
+        }
         return memberService.memberSearch(identity);
     }
 
