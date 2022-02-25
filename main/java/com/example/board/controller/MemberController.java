@@ -17,12 +17,6 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping("/")
-    public String index(Model model){
-        model.addAttribute("name", "kim");
-        return "index.html";
-    }
-
     @PostMapping("/memberCreate")
     public void createMember(@RequestBody MemberCreateDto memberCreateDto){
         memberService.memberCreate(memberCreateDto);

@@ -60,7 +60,7 @@ public class BoardService {
     }
     
     //게시판 전체 조회
-    public List<BoardSearchAllDto> searchAllBoard(){
+    public List<BoardSearchAllDto> searchAllBoard2(){
         List<BoardSearchAllDto> boardSearchAllDto = new ArrayList<>();
 
         List<String> identityList = boardRepository.findAll()
@@ -81,7 +81,7 @@ public class BoardService {
 
         return boardSearchAllDto;
     }
-    public List<BoardSearchAllDto> searchAllBoard2(){
+    public List<BoardSearchAllDto> searchAllBoard(){
         List<Board> boardList = boardRepository.findAll();
 //        return boardList.stream()
 //                .map(board -> {
