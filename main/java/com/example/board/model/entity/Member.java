@@ -1,15 +1,12 @@
 package com.example.board.model.entity;
 
-import com.sun.istack.NotNull;
 import lombok.*;
-
-
 import javax.persistence.*;
-import java.util.Collection;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "board_member")
-@Getter @Setter
+@Data
 @AllArgsConstructor
 @Builder
 public class Member{
@@ -22,7 +19,10 @@ public class Member{
     private String identity;
 
     private String password;
+
+   @Size(min = 3, message = "이름 최소 3글자")
     private String name;
+
     private int age;
 
     public Member() {
