@@ -27,9 +27,6 @@ public class MemberService {
     public MemberSearchDto memberSearch(String identity){
         MemberSearchDto memberSearchDto = new MemberSearchDto();
         Member member = memberRepository.findByIdentity(identity);
-//        if(member == null){
-//            throw new userNotFoundException(String.format("id[%s]is not found", identity));
-//        }
         memberSearchDto.setIdentity(member.getIdentity());
         memberSearchDto.setName(member.getName());
         return memberSearchDto;
